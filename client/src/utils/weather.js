@@ -33,10 +33,10 @@ export function formatClock(isoTime, timezone, options = {}) {
   }
 }
 
-export function formatDay(isoDate, timezone, options = {}) {
+export function formatDay(isoDate, options = {}) {
   if (!isoDate) return "—";
   try {
-    return new Intl.DateTimeFormat(undefined, { timeZone: "UTC", weekday: "short", ...options }).format(new Date(`${isoDate}T12:00:00Z`));
+    return new Intl.DateTimeFormat(undefined, { weekday: "short", ...options, timeZone: "UTC" }).format(new Date(`${isoDate}T12:00:00Z`));
   } catch {
     return "—";
   }

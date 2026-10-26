@@ -42,8 +42,42 @@ function asNumber(value) {
   return Number.isFinite(value) ? value : null;
 }
 
-function withOffset(value, offsetSeconds = 0) {
+function offsetAtInstant(timestamp, timezone) {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  });
+  const parts = Object.fromEntries(formatter.formatToParts(new Date(timestamp)).map(({ type, value }) => [type, value]));
+  const representedAsUtc = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), Number(parts.hour), Number(parts.minute), Number(parts.second));
+  return Math.round((representedAsUtc - Math.floor(timestamp / 1000) * 1000) / 1000);
+}
+
+function offsetForLocalTime(value, timezone, fallbackOffset) {
+  if (!timezone || timezone === "auto") return fallbackOffset;
+  const localAsUtc = Date.parse(`${value}Z`);
+  if (!Number.isFinite(localAsUtc)) return fallbackOffset;
+  try {
+    let offset = offsetAtInstant(localAsUtc, timezone);
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const resolved = offsetAtInstant(localAsUtc - offset * 1000, timezone);
+      if (resolved === offset) break;
+      offset = resolved;
+    }
+    return offset;
+  } catch {
+    return fallbackOffset;
+  }
+}
+
+function withOffset(value, offsetSeconds = 0, timezone = "UTC") {
   if (!value || /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value)) return value;
+  offsetSeconds = offsetForLocalTime(value, timezone, offsetSeconds);
   const sign = offsetSeconds < 0 ? "-" : "+";
   const absolute = Math.abs(offsetSeconds);
   const hours = String(Math.floor(absolute / 3600)).padStart(2, "0");
@@ -61,8 +95,10 @@ export function normalizeWeather(payload, location) {
   }
   const now = payload.current;
   const utcOffset = Number.isFinite(payload.utc_offset_seconds) ? payload.utc_offset_seconds : 0;
-  const hourlyTimes = (payload.hourly.time ?? []).map((time) => withOffset(time, utcOffset));
-  const currentTime = withOffset(now.time, utcOffset);
+  const timezone = payload.timezone || location.timezone || "UTC";
+  const timezoneName = timezone === "auto" ? "UTC" : timezone;
+  const hourlyTimes = (payload.hourly.time ?? []).map((time) => withOffset(time, utcOffset, timezone));
+  const currentTime = withOffset(now.time, utcOffset, timezone);
   const [description, condition] = describeWeather(now.weather_code);
   const startIndex = Math.max(0, hourlyTimes.findIndex((time) => new Date(time).getTime() >= new Date(currentTime).getTime()));
   const hourly = hourlyTimes.slice(startIndex, startIndex + 24).map((time, offset) => {
@@ -89,8 +125,8 @@ export function normalizeWeather(payload, location) {
       weatherCode: valueAt(payload.daily.weather_code, index),
       description: label,
       condition: codeCondition,
-      sunrise: withOffset(payload.daily.sunrise?.[index], utcOffset) ?? null,
-      sunset: withOffset(payload.daily.sunset?.[index], utcOffset) ?? null,
+      sunrise: withOffset(payload.daily.sunrise?.[index], utcOffset, timezone) ?? null,
+      sunset: withOffset(payload.daily.sunset?.[index], utcOffset, timezone) ?? null,
     };
   });
   const name = String(location.name ?? "").trim();
@@ -101,7 +137,7 @@ export function normalizeWeather(payload, location) {
       country,
       latitude: payload.latitude,
       longitude: payload.longitude,
-      timezone: payload.timezone || location.timezone || "UTC",
+      timezone: timezoneName,
     },
     current: {
       time: currentTime,

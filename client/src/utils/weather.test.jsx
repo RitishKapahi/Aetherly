@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import WeatherIcon from "../components/weather/WeatherIcon.jsx";
-import { compassDirection, formatTemperature, toFahrenheit } from "./weather.js";
+import { compassDirection, formatDay, formatTemperature, toFahrenheit } from "./weather.js";
 
 describe("weather display utilities", () => {
   it("converts Celsius to Fahrenheit and formats rounded values", () => {
@@ -16,6 +16,11 @@ describe("weather display utilities", () => {
     expect(compassDirection(0)).toBe("N");
     expect(compassDirection(223)).toBe("SW");
     expect(compassDirection(null)).toBeNull();
+  });
+
+  it("formats forecast dates using the provider's local calendar date", () => {
+    expect(formatDay("2026-10-26")).toBe("Mon");
+    expect(formatDay("2026-10-26", { timeZone: "Pacific/Kiritimati" })).toBe("Mon");
   });
 
   it("renders an icon from the weather condition system", () => {

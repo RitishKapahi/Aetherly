@@ -23,4 +23,21 @@ describe("useCitySearch", () => {
     await waitFor(() => expect(result.current.error).toMatch(/reach Aetherly/i), { timeout: 1500 });
     expect(result.current.results).toEqual([]);
   });
+
+  it("clears prior suggestions while a new query is waiting to run", async () => {
+    vi.useFakeTimers();
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ data: [{ id: "london", name: "London" }] }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ data: [{ id: "paris", name: "Paris" }] }) });
+    vi.stubGlobal("fetch", fetchMock);
+    const { result, rerender } = renderHook(({ query }) => useCitySearch(query), { initialProps: { query: "London" } });
+    await act(async () => { await vi.advanceTimersByTimeAsync(260); });
+    expect(result.current.results[0]?.name).toBe("London");
+
+    rerender({ query: "Paris" });
+    expect(result.current.results).toEqual([]);
+    expect(result.current.loading).toBe(true);
+    await act(async () => { await vi.advanceTimersByTimeAsync(260); });
+    expect(result.current.results[0]?.name).toBe("Paris");
+  });
 });

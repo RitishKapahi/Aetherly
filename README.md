@@ -66,7 +66,7 @@ Account routes use a bcrypt password hash, a short-lived httpOnly cookie, and pe
 
 The root includes `vercel.json` for a Vite static build and Express API function. Import the repository into Vercel and set the build command to `npm run build` and output directory to `client/dist` (also declared in the configuration). Add `MONGODB_URI` and a unique `JWT_SECRET` as Vercel environment variables to enable account sync. The API is same-origin at `/api`, so a separate production CORS origin is not needed. If deploying the API separately, keep it on the same site origin (or behind a same-site reverse proxy) to preserve the httpOnly session cookie policy; configure `CLIENT_ORIGIN` to the exact frontend origin.
 
-This workspace has not been connected to a GitHub remote or a Vercel project. A live deployment also needs your own GitHub/Vercel access and production MongoDB credentials. The checked-in configuration prepares the app for that setup; it is not a live deployment.
+The source is published at [RitishKapahi/Aetherly](https://github.com/RitishKapahi/Aetherly) on the `main` branch. No Vercel project or live deployment is currently configured. The weather dashboard can run without MongoDB; cross-device account sync needs production MongoDB credentials, and deploying requires access to the project owner's Vercel account.
 
 ## Project structure
 

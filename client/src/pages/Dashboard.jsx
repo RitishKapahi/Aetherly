@@ -31,7 +31,7 @@ function DailyForecast({ days, unit, timezone }) {
       <div className="section-heading"><div><span className="section-kicker">A LITTLE FURTHER OUT</span><h2>Five-day forecast</h2></div></div>
       <div className="daily-list">
         {days.map((day, index) => <div className="daily-row" key={day.date}>
-          <div className="daily-day"><strong>{index === 0 ? "Today" : formatDay(day.date, timezone)}</strong><span>{new Intl.DateTimeFormat(undefined, { timeZone: "UTC", month: "short", day: "numeric" }).format(new Date(`${day.date}T12:00:00Z`))}</span></div>
+          <div className="daily-day"><strong>{index === 0 ? "Today" : formatDay(day.date)}</strong><span>{new Intl.DateTimeFormat(undefined, { timeZone: "UTC", month: "short", day: "numeric" }).format(new Date(`${day.date}T12:00:00Z`))}</span></div>
           <WeatherIcon condition={day.condition} size={21} className="daily-weather-icon" />
           <div className="daily-temps"><strong>{formatTemperature(day.high, unit)}</strong><span>{formatTemperature(day.low, unit)}</span></div>
           {Number.isFinite(day.precipitationProbability) && day.precipitationProbability > 0 && <span className="daily-rain"><Droplets size={12} />{day.precipitationProbability}%</span>}

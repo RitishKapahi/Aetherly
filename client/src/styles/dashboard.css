@@ -16,7 +16,7 @@
 .hero-atmosphere { position: absolute; z-index: -1; top: -57px; right: 14px; width: 235px; height: 235px; border-radius: 50%; background: radial-gradient(circle, var(--hero-glow), transparent 66%); }
 .hero-orbit { position: absolute; top: 40px; right: -11px; width: 171px; height: 171px; border: 1px solid color-mix(in srgb, var(--hero-text) 8%, transparent); border-radius: 50%; }
 .hero-orbit-two { top: 21px; right: -30px; width: 209px; height: 209px; border-color: color-mix(in srgb, var(--hero-text) 5%, transparent); }
-.hero-sky-icon { position: absolute; top: 88px; right: 66px; color: color-mix(in srgb, var(--hero-text) 48%, var(--accent)); opacity: .82; filter: drop-shadow(0 5px 15px color-mix(in srgb, var(--hero-text) 8%, transparent)); }
+.hero-sky-icon { position: absolute; top: 126px; right: 66px; color: color-mix(in srgb, var(--hero-text) 48%, var(--accent)); opacity: .82; filter: drop-shadow(0 5px 15px color-mix(in srgb, var(--hero-text) 8%, transparent)); }
 .hero-topline { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .current-live { display: inline-flex; align-items: center; gap: 8px; color: var(--hero-muted); font-size: 9px; font-weight: 720; letter-spacing: 1.05px; }
 .live-dot { width: 6px; height: 6px; }

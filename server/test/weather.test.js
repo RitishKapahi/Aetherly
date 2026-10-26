@@ -27,6 +27,37 @@ test("unknown weather codes remain unavailable instead of being fabricated", () 
   assert.deepEqual(describeWeather(95), ["Thunderstorm", "storm"]);
 });
 
+test("weather timestamps use the correct offset after a daylight-saving change", () => {
+  const normalized = normalizeWeather({
+    latitude: 40.7,
+    longitude: -74,
+    timezone: "America/New_York",
+    utc_offset_seconds: -18000,
+    current: { time: "2026-03-08T00:00", temperature_2m: 5, weather_code: 0, is_day: 0 },
+    hourly: {
+      time: ["2026-03-08T00:00", "2026-03-08T01:00", "2026-03-08T03:00", "2026-03-08T04:00"],
+      temperature_2m: [5, 4, 6, 7],
+      weather_code: [0, 0, 0, 0],
+    },
+    daily: {
+      time: ["2026-03-08"],
+      temperature_2m_max: [8],
+      temperature_2m_min: [2],
+      sunrise: ["2026-03-08T07:20"],
+      sunset: ["2026-03-08T18:55"],
+      weather_code: [0],
+    },
+  }, { name: "New York", country: "United States", timezone: "America/New_York" });
+
+  assert.deepEqual(normalized.hourly.map(({ time }) => time), [
+    "2026-03-08T00:00-05:00",
+    "2026-03-08T01:00-05:00",
+    "2026-03-08T03:00-04:00",
+    "2026-03-08T04:00-04:00",
+  ]);
+  assert.equal(normalized.daily[0].sunrise, "2026-03-08T07:20-04:00");
+});
+
 test("recommendations use available forecast thresholds and omit unsupported data", () => {
   const advice = getRecommendations(
     { temperature: 35, windSpeed: 10 },

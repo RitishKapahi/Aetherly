@@ -34,7 +34,7 @@ export default function AccountDialog({ onClose }) {
         <p className="modal-description">Save favourite places and preferences across your devices.</p>
         <form className="account-form" onSubmit={submit}>
           <label>Email address<input name="email" type="email" placeholder="you@example.com" autoComplete="email" required maxLength={254} /></label>
-          <label>Password<span className="password-field"><input name="password" type={passwordVisible ? "text" : "password"} placeholder={register ? "At least 10 characters" : "Your password"} autoComplete={register ? "new-password" : "current-password"} required minLength={register ? 10 : 1} maxLength={128} /><button type="button" aria-label={passwordVisible ? "Hide password" : "Show password"} onClick={() => setPasswordVisible((value) => !value)}>{passwordVisible ? <EyeOff size={16} /> : <Eye size={16} />}</button></span></label>
+          <label>Password<span className="password-field"><input name="password" type={passwordVisible ? "text" : "password"} placeholder={register ? "10+ characters, up to 72 UTF-8 bytes" : "Your password"} autoComplete={register ? "new-password" : "current-password"} required minLength={register ? 10 : 1} maxLength={72} /><button type="button" aria-label={passwordVisible ? "Hide password" : "Show password"} onClick={() => setPasswordVisible((value) => !value)}>{passwordVisible ? <EyeOff size={16} /> : <Eye size={16} />}</button></span></label>
           {error && <p className="form-error" role="alert">{error}</p>}
           <button className="button button-primary form-submit" type="submit" disabled={busy}>{busy ? "Please wait…" : register ? "Create account" : "Sign in"}</button>
         </form>

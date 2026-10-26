@@ -32,7 +32,7 @@ export default function SearchBox({ onSelect, recent = [] }) {
       <form className={`search-box ${open ? "search-focused" : ""}`} role="search" onSubmit={(event) => { event.preventDefault(); if (results[0]) choose(results[0]); }}>
         <Search size={17} aria-hidden="true" />
         <label className="sr-only" htmlFor="city-search">Search for a city</label>
-        <input id="city-search" value={query} onFocus={() => setOpen(true)} onChange={(event) => { setQuery(event.target.value); setOpen(true); }} placeholder="Search city or place" autoComplete="off" aria-autocomplete="list" aria-expanded={open && options.length > 0} aria-controls="city-suggestions" />
+        <input id="city-search" value={query} onFocus={() => setOpen(true)} onChange={(event) => { setQuery(event.target.value); setOpen(true); }} placeholder="Search city or place" autoComplete="off" aria-autocomplete="list" aria-expanded={open && (options.length > 0 || loading || Boolean(error) || query.trim().length < 2)} aria-controls={options.length > 0 ? "city-suggestions" : undefined} />
         {loading ? <LoaderCircle size={16} className="spin muted-icon" aria-label="Searching" /> : query && <button type="button" className="search-clear" onClick={() => setQuery("")} aria-label="Clear search"><X size={15} /></button>}
       </form>
       {open && (options.length > 0 || error || (query.trim().length >= 2 && !loading)) && (

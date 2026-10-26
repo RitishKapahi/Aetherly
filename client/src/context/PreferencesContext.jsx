@@ -33,8 +33,8 @@ export function PreferencesProvider({ children }) {
   const [accountChecked, setAccountChecked] = useState(false);
 
   useEffect(() => { document.documentElement.dataset.theme = preferences.theme; }, [preferences.theme]);
-  useEffect(() => { persist("aetherly.preferences", preferences); }, [preferences]);
-  useEffect(() => { persist("aetherly.favorites", favorites); }, [favorites]);
+  useEffect(() => { if (!account) persist("aetherly.preferences", preferences); }, [preferences, account]);
+  useEffect(() => { if (!account) persist("aetherly.favorites", favorites); }, [favorites, account]);
   useEffect(() => { persist("aetherly.recent", recent); }, [recent]);
 
   useEffect(() => {

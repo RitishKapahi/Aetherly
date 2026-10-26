@@ -8,18 +8,22 @@ import Dashboard from "../pages/Dashboard.jsx";
 import SavedPlaces from "../pages/SavedPlaces.jsx";
 import { usePreferences } from "../context/PreferencesContext.jsx";
 import { useGeolocation } from "../hooks/useGeolocation.js";
+import { readActiveLocation, saveActiveLocation } from "../utils/activeLocation.js";
 import { Sun, Moon, MapPinned, UserRound, LogOut } from "lucide-react";
 
 function AppLayout() {
-  const { preferences, setPreference, recent, account, signOut } = usePreferences();
+  const { preferences, setPreference, recent, account, signOut, addRecent } = usePreferences();
   const { locate, loading: locating, error: locationError, clearError } = useGeolocation();
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(readActiveLocation);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   const selectCity = (city) => {
-    setSelectedCity({ ...city, id: String(city.id ?? `${city.latitude.toFixed(3)}:${city.longitude.toFixed(3)}`) });
+    const selected = { ...city, id: String(city.id ?? `${city.latitude.toFixed(3)}:${city.longitude.toFixed(3)}`) };
+    setSelectedCity(selected);
+    saveActiveLocation(selected);
+    addRecent(selected);
     clearError();
   };
 

@@ -65,14 +65,14 @@ function WeatherError({ message, retry }) {
 }
 
 export default function Dashboard({ location, onSelectLocation }) {
-  const { defaultCity, preferences, favorites, addFavorite, removeFavorite, addRecent } = usePreferences();
+  const { defaultCity, preferences, favorites, addFavorite, removeFavorite } = usePreferences();
   const activeLocation = location ?? defaultCity;
   const weather = useWeather(activeLocation);
   const data = weather.data;
   const isFavorite = favorites.some((city) => city.id === activeLocation.id);
 
   const toggleFavorite = () => isFavorite ? removeFavorite(activeLocation.id) : addFavorite(activeLocation);
-  const handleLocation = (city) => { onSelectLocation(city); addRecent(city); };
+  const handleLocation = (city) => onSelectLocation(city);
 
   const localDate = data?.current?.time ? new Intl.DateTimeFormat(undefined, { timeZone: data.location.timezone, weekday: "long", month: "long", day: "numeric" }).format(new Date(data.current.time)) : new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric" }).format(new Date());
 

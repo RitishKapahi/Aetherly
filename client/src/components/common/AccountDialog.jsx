@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CloudSun, Eye, EyeOff, X } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, X } from "lucide-react";
 import { usePreferences } from "../../context/PreferencesContext.jsx";
 
 export default function AccountDialog({ onClose }) {
@@ -28,7 +28,7 @@ export default function AccountDialog({ onClose }) {
     <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-title">
         <button className="icon-button modal-close" onClick={onClose} aria-label="Close sign in"><X size={19} /></button>
-        <div className="modal-brand"><span className="brand-mark"><CloudSun size={20} /></span><span>aetherly<span>.</span></span></div>
+        <div className="modal-brand"><span className="brand-mark"><img src="/aetherly-mark.svg" alt="" /></span><span>aetherly<span>.</span></span></div>
         <div className="modal-eyebrow">Your weather, in sync</div>
         <h2 id="account-title">{register ? "Create your account" : "Welcome back"}</h2>
         <p className="modal-description">Save favourite places and preferences across your devices.</p>

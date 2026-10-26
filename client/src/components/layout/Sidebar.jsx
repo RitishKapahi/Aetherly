@@ -1,4 +1,4 @@
-import { Bookmark, CloudSun, Home, MapPin, X } from "lucide-react";
+import { Bookmark, Home, MapPin, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 export default function Sidebar({ open, onClose }) {
@@ -7,7 +7,7 @@ export default function Sidebar({ open, onClose }) {
       <button className={`sidebar-scrim ${open ? "is-visible" : ""}`} onClick={onClose} aria-label="Close navigation" tabIndex={open ? 0 : -1} />
       <aside className={`sidebar ${open ? "is-open" : ""}`}>
         <div className="brand-row">
-          <span className="brand-mark"><CloudSun size={21} strokeWidth={1.8} /></span>
+          <span className="brand-mark"><img src="/aetherly-mark.svg" alt="" /></span>
           <span className="brand-name">aetherly<span>.</span></span>
           <button className="icon-button sidebar-close" onClick={onClose} aria-label="Close navigation"><X size={19} /></button>
         </div>

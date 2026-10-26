@@ -11,7 +11,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 
 .sidebar { position: fixed; z-index: 30; inset: 0 auto 0 0; display: flex; width: var(--sidebar-width); flex-direction: column; padding: 29px 20px 19px; border-right: 1px solid var(--line); background: var(--panel); }
 .brand-row { display: flex; align-items: center; gap: 10px; padding: 0 4px; }
-.brand-mark { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border-radius: 11px; background: var(--accent-wash); color: var(--accent); }
+.brand-mark { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; }
+.brand-mark img { display: block; width: 100%; height: 100%; }
 .brand-name { color: var(--text-strong); font-size: 21px; font-weight: 720; letter-spacing: -.9px; }
 .brand-name span, .modal-brand > span:last-child span { color: var(--accent); }
 .sidebar-label { margin: 42px 0 12px 10px; color: var(--faint); font-size: 10px; font-weight: 700; letter-spacing: 1.35px; text-transform: uppercase; }
@@ -101,7 +102,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 @keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border: 0; background: transparent; }
 .modal-brand { display: flex; align-items: center; gap: 8px; color: var(--text-strong); font-size: 15px; font-weight: 700; letter-spacing: -.4px; }
-.modal-brand .brand-mark { width: 30px; height: 30px; border-radius: 9px; }
+.modal-brand .brand-mark { width: 30px; height: 30px; }
 .modal-eyebrow { margin-top: 29px; color: var(--accent); font-size: 9px; font-weight: 750; letter-spacing: 1.2px; text-transform: uppercase; }
 .account-modal h2 { margin: 8px 0 6px; color: var(--text-strong); font-size: 23px; letter-spacing: -.8px; }
 .modal-description { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }

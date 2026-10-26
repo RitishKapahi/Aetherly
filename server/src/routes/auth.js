@@ -10,7 +10,11 @@ const authLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeade
 const COOKIE = "aetherly_session";
 
 export function isValidPassword(password) {
-  return typeof password === "string" && password.length >= 10 && Buffer.byteLength(password, "utf8") <= 72;
+  return typeof password === "string"
+    && [...password].length >= 8
+    && /[0-9]/.test(password)
+    && /[^\p{L}\p{N}\s]/u.test(password)
+    && Buffer.byteLength(password, "utf8") <= 72;
 }
 
 function credentialsAvailable(res) {
@@ -68,7 +72,10 @@ router.post("/register", authLimit, async (req, res, next) => {
   const email = String(req.body?.email ?? "").trim().toLowerCase();
   const password = String(req.body?.password ?? "");
   if (!/^\S+@\S+\.\S+$/.test(email) || email.length > 254) return res.status(400).json({ error: { message: "Enter a valid email address." } });
-  if (!isValidPassword(password)) return res.status(400).json({ error: { message: "Use a password with at least 10 characters and no more than 72 UTF-8 bytes." } });
+  if ([...password].length < 8 || !/[0-9]/.test(password) || !/[^\p{L}\p{N}\s]/u.test(password)) {
+    return res.status(400).json({ error: { message: "Use at least 8 characters, including one number and one special character." } });
+  }
+  if (Buffer.byteLength(password, "utf8") > 72) return res.status(400).json({ error: { message: "Password is too long." } });
   try {
     await connectDatabase();
     if (await User.exists({ email })) return res.status(409).json({ error: { message: "An account with this email already exists." } });
@@ -85,7 +92,7 @@ router.post("/login", authLimit, async (req, res, next) => {
   if (!credentialsAvailable(res)) return;
   const email = String(req.body?.email ?? "").trim().toLowerCase();
   const password = String(req.body?.password ?? "");
-  if (!isValidPassword(password)) return res.status(401).json({ error: { message: "Email or password is incorrect." } });
+  if (password.length > 128) return res.status(401).json({ error: { message: "Email or password is incorrect." } });
   try {
     await connectDatabase();
     const user = await User.findOne({ email }).select("+passwordHash");
